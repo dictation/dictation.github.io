@@ -1,0 +1,131 @@
+<html>
+<head>
+<style>
+input {
+  margin: 20px 20px 20px 20px;
+  //padding: 20px
+  outline: 0;
+  border-width: 0 0 2px;
+  border-color: blue;
+  font-size: 30px;
+}
+input:focus {
+  border-color: green
+}
+div {
+  text-align: center;
+}
+</style>
+</head>
+<body>
+<div id='main'>
+	<input type="button" value="New Word" id="new_word">
+</div>
+<script>
+function speak(msg, cancel) {
+  //if(cancel==true) {
+	//window.speechSynthesis.cancel();
+  //}
+  var ssMsg = new SpeechSynthesisUtterance(msg);
+  window.speechSynthesis.speak(ssMsg);
+}
+
+var dictionary = [
+		{ word: 'expect', def: 'wish to happen' },
+		{ word: 'fibre', def: 'fine thread' },
+		{ word: 'fright', def: 'a feeling of fear' },
+		{ word: 'generally', def: 'commonly' },
+		{ word: 'plight', def: 'a sad situation' },
+		{ word: 'scrabble', def: 'find something using fingers' },
+		{ word: 'submerge', def: 'drown under water' },
+		{ word: 'antlers', def: 'branch like horns grown on male deer' },
+		{ word: 'domesticate', def: 'tame animals to keep as pets or on a farm' },
+		{ word: 'binoculars', def: 'a pair of lenses in tubes to see things that are far away' },
+		{ word: 'experience', def: 'skill or incident' },
+		{ word: 'companion', def: 'friend or partner' },
+		{ word: 'curious', def: 'eager to know' },
+		{ word: 'extinct', def: 'not found anymore' },
+		{ word: 'flesh', def: 'meat, the soft part of the body under the skin' },
+		{ word: 'safari', def: 'trip to see wild animals' },
+		{ word: 'fluffy', def: 'soft, like fur' },
+		{ word: 'scratch', def: 'rub against something' },
+		{ word: 'grind', def: 'crush to make smaller pieces or powder' },
+		{ word: 'scatter', def: 'spread all over' },
+		{ word: 'herd', def: 'Group of animals' },
+		{ word: 'tiptoe', def: 'walk with one\'s heels raised' },
+		{ word: 'leftover', def: 'something, especially food, remaining after most has been used' },
+		{ word: 'trail', def: 'path' }
+]
+
+
+function _(id) {
+  return document.getElementById(id);
+}
+
+function nextBox(totalBoxes) {
+	for(i=0; i<totalBoxes; i++) {
+		if(_('alphabet_'+i).value=='') {
+		  return _('alphabet_'+i);
+		}
+	}
+	return null;
+}
+
+function removeBoxes(totalBoxes) {
+	for(i=0; i<totalBoxes; i++) {
+		_('alphabet_'+i).remove();
+	}
+}
+
+function newTextBox(idx, expectedWord) {
+	var textbox = document.createElement('input');
+	textbox.type = 'text';
+	textbox.size = 1;
+	textbox.maxLength = 1;
+	textbox.id = 'alphabet_'+j;
+	textbox.oninput = function(event) {
+		if(event.target.value.toLowerCase()==expectedWord[idx].toLowerCase()) {
+			speak('Very Good', true);
+			var nextAlphabetBox = nextBox(expectedWord.length);
+			if(nextAlphabetBox==null) {
+				speak('Super this word is correctly spelled',false);
+				removeBoxes(expectedWord.length);
+				_('new_word').hidden = false;
+			} else {
+			    nextAlphabetBox.focus();
+			}
+		} else {
+			speak('Sorry Try Again',true);
+			event.target.value='';
+		}
+	}
+	return textbox;
+}
+
+var nextWordIdx = 0;
+function newWordClick(event) {
+ var mainDiv = _('main');
+ if(nextWordIdx>=dictionary.length) {
+    var textSpan = document.createElement('span');
+	textSpan.innerHTML = 'All Done!';
+	mainDiv.appendChild(textSpan);
+	return;
+ }
+ var word = dictionary[nextWordIdx].word;
+ speak(word, false);
+ speak(dictionary[nextWordIdx].def, false);
+ for(j=0; j<word.length; j++)
+ {
+	var alphabetBox = newTextBox(j, word);	
+	mainDiv.appendChild(alphabetBox);
+ }
+ _('alphabet_0').focus();
+ event.target.hidden = true;
+ nextWordIdx++;
+}
+
+_('new_word').onclick = newWordClick;
+
+</script>
+</body>
+</html>
