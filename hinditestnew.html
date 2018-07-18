@@ -1,0 +1,115 @@
+<html>
+<head>
+<script type="text/javascript" src="unorm.js" ></script>
+<style>
+input {
+  margin: 20px 20px 20px 20px;
+  //padding: 20px
+  outline: 0;
+  border-width: 0 0 2px;
+  border-color: blue;
+  font-size: 30px;
+}
+input:focus {
+  border-color: green
+}
+div {
+  text-align: center;
+}
+</style>
+</head>
+<body>
+<div id='main'>
+	<input type="button" value="New Word" id="new_word">
+</div>
+<script>
+function speak(msg, cancel) {
+  //if(cancel==true) {
+	//window.speechSynthesis.cancel();
+  //}
+  var ssMsg = new SpeechSynthesisUtterance(msg);
+  ssMsg.lang = 'hi-IN';
+  window.speechSynthesis.speak(ssMsg);
+}
+
+/*var dictionary = [
+		{ word: 'अंग', def: 'शरीर का कोइ भाग' },
+		{ word: 'कंठ', def: 'गले का भीतरी हिससा' },
+		{ word: 'कारण', def: 'वजह' },
+		{ word: 'कोना', def: 'वह सथान जहाँ दो लकीरें मिलती हैं' },
+		{ word: 'गाथा', def: 'कहानी' },
+		{ word: 'बड़बड़ाना', def: 'धीरे-धीरे और असपषठ बोलना' },
+		{ word: 'चुपचाप', def: 'शांत, बिना बोले' },
+		{ word: 'महत्त्वपू्र्ण', def: 'ज़रुरी' },
+		{ word: 'ज़रुरत', def: 'आवशयकता' },
+		{ word: 'सहायता', def: 'मदद' },
+		{ word: 'जवाब', def: 'सवाद' }
+]*/
+var dictionary = [
+		{ word: 'आज़ादी', def: 'स्वतंत्रता' },
+		{ word: 'आलसी', def: 'सुस्त' },
+		{ word: 'इमरती', def: 'जलेबी जैसी दिखने वाली एक तरह की मिठाई' },
+		{ word: 'गंदा', def: 'मैला' },
+		{ word: 'झपकी', def: 'थोड़ी देर की कच्ची नींद' },
+		{ word: 'प्रतिदिन', def: 'हर रोज़' },
+		{ word: 'निश्चय', def: 'पक्का इरादा' },
+		{ word: 'मौका', def: 'अवसर' },
+		{ word: 'पेड़ा', def: 'खोए से बनी एक मिठाई' },
+		{ word: 'रूठना', def: 'नाराज़ होना' },
+		{ word: 'परेशान', def: 'दुखी' },
+		{ word: 'संख्या', def: 'अंक' }
+]
+
+function _(id) {
+  return document.getElementById(id);
+}
+
+function newWordBox(expectedWord) {
+	var textbox = document.createElement('input');
+	textbox.type = 'text';
+	//textbox.size = 1;
+	//textbox.maxLength = 1;
+	textbox.id = 'word';
+	textbox.oninput = function(event) {
+		if(expectedWord.toLowerCase().startsWith(event.target.value.toLowerCase())) {
+			textbox.style.color = 'green';
+			if(expectedWord.toLowerCase()==event.target.value.toLowerCase()) {
+				speak('Super this word is correctly spelled',false);
+				textbox.remove();
+				_('new_word').hidden = false;
+			} 
+		} else {
+			textbox.style.color = 'red';
+			//event.target.value='';
+		}
+	}
+	return textbox;
+}
+
+var nextWordIdx = 0;
+function newWordClick(event) {
+ var mainDiv = _('main');
+ if(nextWordIdx>=dictionary.length) {
+    var textSpan = document.createElement('span');
+	textSpan.innerHTML = 'All Done!';
+	mainDiv.appendChild(textSpan);
+	return;
+ }
+ var word = dictionary[nextWordIdx].word;
+ speak(word, false);
+ speak(dictionary[nextWordIdx].def, false);
+ 
+ var wordBox = newWordBox(word);	
+ mainDiv.appendChild(wordBox);
+ 
+ 
+ wordBox.focus();
+ event.target.hidden = true;
+ nextWordIdx++;
+}
+
+_('new_word').onclick = newWordClick;
+
+</script>
+</body>
+</html>
