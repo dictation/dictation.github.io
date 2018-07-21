@@ -1,8 +1,9 @@
 <html>
 <head>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 <style>
 input {
-  margin: 20px 20px 20px 20px;
+  //margin: 20px 20px 20px 20px;
   //padding: 20px
   outline: 0;
   border-width: 0 0 2px;
@@ -31,30 +32,21 @@ function speak(msg, cancel) {
 }
 
 var dictionary = [
-		{ word: 'expect', def: 'wish to happen' },
-		{ word: 'fibre', def: 'fine thread' },
-		{ word: 'fright', def: 'a feeling of fear' },
-		{ word: 'generally', def: 'commonly' },
-		{ word: 'plight', def: 'a sad situation' },
-		{ word: 'scrabble', def: 'find something using fingers' },
-		{ word: 'submerge', def: 'drown under water' },
-		{ word: 'antlers', def: 'branch like horns grown on male deer' },
-		{ word: 'domesticate', def: 'tame animals to keep as pets or on a farm' },
-		{ word: 'binoculars', def: 'a pair of lenses in tubes to see things that are far away' },
-		{ word: 'experience', def: 'skill or incident' },
-		{ word: 'companion', def: 'friend or partner' },
-		{ word: 'curious', def: 'eager to know' },
-		{ word: 'extinct', def: 'not found anymore' },
-		{ word: 'flesh', def: 'meat, the soft part of the body under the skin' },
-		{ word: 'safari', def: 'trip to see wild animals' },
-		{ word: 'fluffy', def: 'soft, like fur' },
-		{ word: 'scratch', def: 'rub against something' },
-		{ word: 'grind', def: 'crush to make smaller pieces or powder' },
-		{ word: 'scatter', def: 'spread all over' },
-		{ word: 'herd', def: 'Group of animals' },
-		{ word: 'tiptoe', def: 'walk with one\'s heels raised' },
-		{ word: 'leftover', def: 'something, especially food, remaining after most has been used' },
-		{ word: 'trail', def: 'path' }
+		{ word: 'checkered', def: 'marked with squares' },
+		{ word: 'decide', def: 'to determine or settle (something in dispute or doubt)' },
+		{ word: 'crunchy', def: 'crisp; brittle' },
+		{ word: 'disappoint', def: 'to fail to fulfill the expectations or wishes of' },
+		{ word: 'fence', def: 'a barrier enclosing or bordering a field, yard, etc., usually made of posts and wire or wood, used to prevent entrance, to confine, or to mark a boundary' },
+		{ word: 'flutter', def: 'to flap the wings rapidly; fly with flapping movements' },
+		{ word: 'stuff', def: 'material of some unspecified kind' },
+		{ word: 'harmful', def: 'causing or capable of causing harm; injurious' },
+		{ word: 'suggest', def: 'to mention or introduce (an idea, proposition, plan, etc.) for consideration or possible action' },
+		{ word: 'harvest', def: 'the gathering of crops' },
+		{ word: 'tempting', def: 'that tempts; enticing or inviting' },
+		{ word: 'nibble', def: 'to eat or chew in small bites' },
+		{ word: 'variety', def: 'a number of different types of things, especially ones in the same general category' },
+		{ word: 'pole', def: 'a long, cylindrical, often slender piece of wood, metal, etc.' },
+		{ word: 'wonderful', def: 'excellent; great; marvelous' }
 ]
 
 
@@ -62,44 +54,42 @@ function _(id) {
   return document.getElementById(id);
 }
 
-function nextBox(totalBoxes) {
-	for(i=0; i<totalBoxes; i++) {
-		if(_('alphabet_'+i).value=='') {
-		  return _('alphabet_'+i);
-		}
-	}
-	return null;
-}
-
-function removeBoxes(totalBoxes) {
-	for(i=0; i<totalBoxes; i++) {
-		_('alphabet_'+i).remove();
-	}
-}
-
-function newTextBox(idx, expectedWord) {
+function newWordBox(expectedWord) {
 	var textbox = document.createElement('input');
 	textbox.type = 'text';
-	textbox.size = 1;
-	textbox.maxLength = 1;
-	textbox.id = 'alphabet_'+j;
+	//textbox.size = 1;
+	//textbox.maxLength = 1;
+	textbox.id = 'word';
 	textbox.oninput = function(event) {
-		if(event.target.value.toLowerCase()==expectedWord[idx].toLowerCase()) {
-			speak('Very Good', true);
-			var nextAlphabetBox = nextBox(expectedWord.length);
-			if(nextAlphabetBox==null) {
+		if(expectedWord.toLowerCase().startsWith(event.target.value.toLowerCase())) {
+			textbox.style.color = 'green';
+			if(expectedWord.toLowerCase()==event.target.value.toLowerCase()) {
 				speak('Super this word is correctly spelled',false);
-				removeBoxes(expectedWord.length);
+				textbox.remove();
+				_('playIcon').remove();
 				_('new_word').hidden = false;
-			} else {
-			    nextAlphabetBox.focus();
-			}
+			} 
 		} else {
-			speak('Sorry Try Again',true);
-			event.target.value='';
+			textbox.style.color = 'red';
+			//event.target.value='';
 		}
 	}
 	return textbox;
+}
+
+function newPlayIcon(dictItem) {
+  var playIcon = document.createElement("i");
+  playIcon.id = "playIcon";
+  playIcon.className = 'material-icons';
+  playIcon.style.cssText = "cursor: pointer; font-size:30px";
+  playIcon.textContent = "play_circle_outline";
+  playIcon.onclick = function(event) {
+	speak(dictItem.word, false);
+	speak(dictItem.def, false);
+    _('word').focus();
+  }
+
+  return playIcon;
 }
 
 var nextWordIdx = 0;
@@ -114,12 +104,13 @@ function newWordClick(event) {
  var word = dictionary[nextWordIdx].word;
  speak(word, false);
  speak(dictionary[nextWordIdx].def, false);
- for(j=0; j<word.length; j++)
- {
-	var alphabetBox = newTextBox(j, word);	
-	mainDiv.appendChild(alphabetBox);
- }
- _('alphabet_0').focus();
+ 
+ var wordBox = newWordBox(word);
+ mainDiv.appendChild(newPlayIcon(dictionary[nextWordIdx])); 
+ mainDiv.appendChild(wordBox);
+ 
+ 
+ wordBox.focus();
  event.target.hidden = true;
  nextWordIdx++;
 }
