@@ -10,6 +10,9 @@ input {
   border-color: blue;
   font-size: 50px;
 }
+#word {
+  font-size: 50px;
+}
 input:focus {
   border-color: green
 }
@@ -20,10 +23,19 @@ i#playIcon {
   cursor: pointer; font-size:50px;
 }
 </style>
+<link rel="stylesheet" type="text/css" href="success.css">
 </head>
 <body>
 <div id='main'>
 	<input type="button" value="New Word" id="new_word">
+</div>
+<div id="success" class="check_mark" style="display:none">
+  <div class="sa-icon sa-success animate">
+    <span class="sa-line sa-tip animateSuccessTip"></span>
+    <span class="sa-line sa-long animateSuccessLong"></span>
+    <div class="sa-placeholder"></div>
+    <div class="sa-fix"></div>
+  </div>
 </div>
 <script>
 function speak(msg, cancel) {
@@ -57,6 +69,13 @@ function _(id) {
   return document.getElementById(id);
 }
 
+function newWordLabel(expectedWord) {
+	var label = document.createElement('div');
+	label.id = 'word';
+	label.textContent = expectedWord;
+	return label;
+}
+
 function newWordBox(expectedWord) {
 	var textbox = document.createElement('input');
 	textbox.type = 'text';
@@ -68,9 +87,14 @@ function newWordBox(expectedWord) {
 			textbox.style.color = 'green';
 			if(expectedWord.toLowerCase()==event.target.value.toLowerCase()) {
 				speak('Super this word is correctly spelled',false);
-				textbox.remove();
+				_('word').remove();
 				_('playIcon').remove();
-				_('new_word').hidden = false;
+				_('main').appendChild(newWordLabel(expectedWord));
+				_("success").style.display = 'block';
+				setTimeout(function() {
+					_('new_word').hidden = false;
+					_('playIcon').remove();
+				}, 200);
 			} 
 		} else {
 			textbox.style.color = 'red';
@@ -96,6 +120,13 @@ function newPlayIcon(dictItem) {
 
 var nextWordIdx = 0;
 function newWordClick(event) {
+ if(_('word')) {
+   _('word').remove();
+ }
+ if(_('playIcon')) {
+   _('playIcon').remove();
+ }
+ _("success").style.display = 'none';
  var mainDiv = _('main');
  if(nextWordIdx>=dictionary.length) {
     var textSpan = document.createElement('span');
