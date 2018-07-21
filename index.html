@@ -8,13 +8,16 @@ input {
   outline: 0;
   border-width: 0 0 2px;
   border-color: blue;
-  font-size: 30px;
+  font-size: 50px;
 }
 input:focus {
   border-color: green
 }
 div {
   text-align: center;
+}
+i#playIcon {
+  cursor: pointer; font-size:50px;
 }
 </style>
 </head>
@@ -81,7 +84,6 @@ function newPlayIcon(dictItem) {
   var playIcon = document.createElement("i");
   playIcon.id = "playIcon";
   playIcon.className = 'material-icons';
-  playIcon.style.cssText = "cursor: pointer; font-size:30px";
   playIcon.textContent = "play_circle_outline";
   playIcon.onclick = function(event) {
 	speak(dictItem.word, false);
