@@ -118,8 +118,10 @@ function newPlayIcon(dictItem) {
   return playIcon;
 }
 
+var testInProgress = false;
 var nextWordIdx = 0;
 function newWordClick(event) {
+ testInProgress = true;
  if(_('word')) {
    _('word').remove();
  }
@@ -129,6 +131,7 @@ function newWordClick(event) {
  _("success").style.display = 'none';
  var mainDiv = _('main');
  if(nextWordIdx>=dictionary.length) {
+	testInProgress = false;
     var textSpan = document.createElement('span');
 	textSpan.innerHTML = 'All Done!';
 	mainDiv.appendChild(textSpan);
@@ -149,6 +152,10 @@ function newWordClick(event) {
 }
 
 _('new_word').onclick = newWordClick;
+
+window.onbeforeunload = function() {
+    return testInProgress;
+};
 
 </script>
 </body>
