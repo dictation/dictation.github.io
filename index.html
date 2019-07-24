@@ -1,5 +1,10 @@
 <html>
 <head>
+  <!-- Load React. -->
+  <!-- Note: when deploying, replace "development.js" with "production.min.js". -->
+  <script src="https://unpkg.com/react@16/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js" crossorigin></script>
+  
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 <style>
 input {
@@ -27,8 +32,9 @@ i#playIcon {
 </head>
 <body>
 <div id='main'>
-	<input type="button" value="New Word" id="new_word">
+	
 </div>
+
 <div id="success" class="check_mark" style="display:none">
   <div class="sa-icon sa-success animate">
     <span class="sa-line sa-tip animateSuccessTip"></span>
@@ -45,6 +51,37 @@ function speak(msg, cancel) {
   var ssMsg = new SpeechSynthesisUtterance(msg);
   window.speechSynthesis.speak(ssMsg);
 }
+
+var tests = [
+	{
+		title:"English Dictation Test to be held on 10-Sep-18",
+		dictionary: [
+			{ word: 'attempt', def: 'to try' },
+			{ word: 'beautiful', def: 'good looking' }
+		]		
+	},
+	{
+		title:"English Old Dictation Test",
+		dictionary: [
+			{ word: 'checkered', def: 'marked with squares' },
+			{ word: 'decide', def: 'to determine or settle (something in dispute or doubt)' },
+			{ word: 'crunchy', def: 'crisp; brittle' },
+			{ word: 'disappoint', def: 'to fail to fulfill the expectations or wishes of' },
+			{ word: 'fence', def: 'a barrier enclosing or bordering a field, yard, etc., usually made of posts and wire or wood, used to prevent entrance, to confine, or to mark a boundary' },
+			{ word: 'flutter', def: 'to flap the wings rapidly; fly with flapping movements' },
+			{ word: 'stuff', def: 'material of some unspecified kind' },
+			{ word: 'harmful', def: 'causing or capable of causing harm; injurious' },
+			{ word: 'suggest', def: 'to mention or introduce (an idea, proposition, plan, etc.) for consideration or possible action' },
+			{ word: 'harvest', def: 'the gathering of crops' },
+			{ word: 'tempting', def: 'that tempts; enticing or inviting' },
+			{ word: 'nibble', def: 'to eat or chew in small bites' },
+			{ word: 'variety', def: 'a number of different types of things, especially ones in the same general category' },
+			{ word: 'pole', def: 'a long, cylindrical, often slender piece of wood, metal, etc.' },
+			{ word: 'wonderful', def: 'excellent; great; marvelous' }
+		]		
+	}
+
+];
 
 var dictionary = [
 		{ word: 'checkered', def: 'marked with squares' },
@@ -157,6 +194,10 @@ window.onbeforeunload = function() {
     return testInProgress;
 };
 
+ReactDOM.render(
+  <input type="button" value="New Word" id="new_word">,
+  document.getElementById('main')
+);
 </script>
 </body>
 </html>

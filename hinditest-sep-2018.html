@@ -1,0 +1,160 @@
+<html>
+<head>
+<script type="text/javascript" src="unorm.js" ></script>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<style>
+input {
+  //margin: 20px 20px 20px 20px;
+  //padding: 20px
+  outline: 0;
+  border-width: 0 0 2px;
+  border-color: blue;
+  font-size: 50px;
+}
+#word {
+  font-size: 50px;
+}
+input:focus {
+  border-color: green
+}
+div {
+  text-align: center;
+}
+i#playIcon {
+  cursor: pointer; font-size:50px;
+}
+</style>
+<link rel="stylesheet" type="text/css" href="success.css">
+</head>
+<body>
+<div id='main'>
+	<input type="button" value="New Word" id="new_word">
+</div>
+
+<div id="success" class="check_mark" style="display:none">
+  <div class="sa-icon sa-success animate">
+    <span class="sa-line sa-tip animateSuccessTip"></span>
+    <span class="sa-line sa-long animateSuccessLong"></span>
+    <div class="sa-placeholder"></div>
+    <div class="sa-fix"></div>
+  </div>
+</div>
+
+<script>
+function speak(msg, cancel) {
+  //if(cancel==true) {
+	//window.speechSynthesis.cancel();
+  //}
+  var ssMsg = new SpeechSynthesisUtterance(msg);
+  ssMsg.lang = 'hi-IN';
+  window.speechSynthesis.speak(ssMsg);
+}
+
+
+var dictionary = [
+		/*{ word: 'आदत', def: 'स्वभाव। खाँसते समय मुँह पर रूमाल रखना अच्छी आदत है' },
+		{ word: 'किनारा', def: 'तट। मछलियाँ तैरते-तैरते सागर के किनारे तक आ गई' },
+		{ word: 'चेतावनी', def: 'सावधान करने के लिए कही गई बात।माँ ने राहुल को बिजली के तारों से दूर रहने की चेतावनी दी' },
+		*/{ word: 'जंगल', def: 'वन जंगल में अनेक जानवर रहते हैं' },
+		{ word: 'जाल', def: 'जालीदार कपड़ा जिस्से मछलियाँ पकड़ते हैं। मछुआरे के जाल में बहुत-सी मछलियाँ फँस गई थीं' },
+		{ word: 'तुरंत', def: 'जलदी से। घंटी बजते ही बच्चे तुरंत भागने लगे' },
+		{ word: 'बिलबिलाना', def: 'बहुत परेशान होना। चूहेदानी में पँसने के बाद चूहा बिलबिला रहा था' },
+		{ word: 'मित्रता', def: 'दोस्ती। सुमित और मोहित में अच्छी मित्रता है' },
+		{ word: 'मुसीबत', def: 'परेशानी। अपने दोस्त को मुसीबत में देखकर विकास ने उसकी सहायता की' },
+		{ word: 'शरारत', def: 'शैतानी। अविनाश ने अपनी शरारतों से सभी को परेशान कर दिया था' },
+		{ word: 'शिकारी', def: 'पशु-पक्षियों को मारनेवाला व्यक्ति। शिकारी जाल बिछाकर पक्षियों का शिकार कर रहा हौ' },
+		{ word: 'सरपट', def: 'बहुत तेज़ चाल। घोड़ा मैदान में सरपट दौड़ रहा है' },
+		{ word: 'स्वयं', def: 'अपने-आप। मैं अपना ग्र्हकार्य स्वयं करती हूँ' }
+]
+
+function _(id) {
+  return document.getElementById(id);
+}
+
+function newWordLabel(expectedWord) {
+	var label = document.createElement('div');
+	label.id = 'word';
+	label.textContent = expectedWord;
+	return label;
+}
+
+function newWordBox(expectedWord) {
+	var textbox = document.createElement('input');
+	textbox.type = 'text';
+	//textbox.size = 1;
+	//textbox.maxLength = 1;
+	textbox.id = 'word';
+	textbox.oninput = function(event) {
+		if(expectedWord.toLowerCase().startsWith(event.target.value.toLowerCase())) {
+			textbox.style.color = 'green';
+			if(expectedWord.toLowerCase()==event.target.value.toLowerCase()) {
+				speak('Super this word is correctly spelled',false);
+				_('word').remove();
+				_('playIcon').remove();
+				_('main').appendChild(newWordLabel(expectedWord));
+				_("success").style.display = 'block';
+				setTimeout(function() {
+					_('new_word').hidden = false;
+					_('playIcon').remove();
+				}, 200);
+			} 
+		} else {
+			textbox.style.color = 'red';
+			//event.target.value='';
+		}
+	}
+	return textbox;
+}
+
+function newPlayIcon(dictItem) {
+  var playIcon = document.createElement("i");
+  playIcon.id = "playIcon";
+  playIcon.className = 'material-icons';
+  playIcon.textContent = "play_circle_outline";
+  playIcon.onclick = function(event) {
+	speak(dictItem.word, false);
+	speak(dictItem.def, false);
+    _('word').focus();
+  }
+
+  return playIcon;
+}
+
+var testInProgress = false;
+var nextWordIdx = 0;
+function newWordClick(event) {
+ testInProgress = true;
+ if(_('word')) {
+   _('word').remove();
+ }
+ if(_('playIcon')) {
+   _('playIcon').remove();
+ }
+ _("success").style.display = 'none';
+ var mainDiv = _('main');
+ if(nextWordIdx>=dictionary.length) {
+   testInProgress = false;
+    var textSpan = document.createElement('span');
+	textSpan.innerHTML = 'All Done!';
+	mainDiv.appendChild(textSpan);
+	return;
+ }
+ var word = dictionary[nextWordIdx].word;
+ speak(word, false);
+ speak(dictionary[nextWordIdx].def, false);
+ 
+ var wordBox = newWordBox(word);	
+ mainDiv.appendChild(newPlayIcon(dictionary[nextWordIdx])); 
+ mainDiv.appendChild(wordBox);
+ 
+ 
+ wordBox.focus();
+ event.target.hidden = true;
+ nextWordIdx++;
+}
+
+_('new_word').onclick = newWordClick;
+
+</script>
+</body>
+</html>

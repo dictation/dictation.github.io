@@ -1,0 +1,175 @@
+<html>
+<head>
+<script type="text/javascript" src="unorm.js" ></script>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<style>
+input {
+  //margin: 20px 20px 20px 20px;
+  //padding: 20px
+  outline: 0;
+  border-width: 0 0 2px;
+  border-color: blue;
+  font-size: 50px;
+}
+#word {
+  font-size: 50px;
+}
+input:focus {
+  border-color: green
+}
+div {
+  text-align: center;
+}
+i#playIcon {
+  cursor: pointer; font-size:50px;
+}
+</style>
+<link rel="stylesheet" type="text/css" href="success.css">
+</head>
+<body>
+<div id='main'>
+	<input type="button" value="New Word" id="new_word">
+</div>
+
+<div id="success" class="check_mark" style="display:none">
+  <div class="sa-icon sa-success animate">
+    <span class="sa-line sa-tip animateSuccessTip"></span>
+    <span class="sa-line sa-long animateSuccessLong"></span>
+    <div class="sa-placeholder"></div>
+    <div class="sa-fix"></div>
+  </div>
+</div>
+
+<script>
+function speak(msg, cancel) {
+  //if(cancel==true) {
+	//window.speechSynthesis.cancel();
+  //}
+  var ssMsg = new SpeechSynthesisUtterance(msg);
+  //ssMsg.lang = 'hi-IN';
+  window.speechSynthesis.speak(ssMsg);
+}
+
+var dictionary = [
+		{ word: 'sneered', def: 'to talk about or look at someone or something in an unkind way that shows you do not respect or approve of him, her, or it' },
+		{ word: 'settle', def: 'to reach a decision or an agreement about something, or to end a disagreement' },
+		{ word: 'tablet', def: 'a small, solid piece of medicine or a thin, flat, often square piece of hard material such as wood, stone, or metal or a small, flat computer that is controlled by touching the screen or by using a special pen' },
+		{ word: 'inscribed', def: 'to write words in a book or carve (= cut) them on an object' },
+		{ word: 'sneaked', def: 'to look at someone or something quickly and secretly or move or go in a furtive or stealthy way' },
+		{ word: 'strain', def: 'force (a part of one\'s body or oneself) to make an unusually great effort.' },
+		{ word: 'confucius', def: 'a Chinese philosopher and politician' },
+		{ word: 'triumphantly', def: 'in a way that shows great happiness or joy at a victory or achievement' },
+		{ word: 'vision', def: 'the faculty or state of being able to see or the ability to think about or plan the future with imagination or wisdom' },
+		{ word: 'disappointing', def: 'failing to fulfil someone\'s hopes or expectations' }
+]
+
+/*var dictionary = [
+		{ word: 'attempt', def: 'to try' },
+		{ word: 'explain', def: 'make clear' },
+		{ word: 'beautiful', def: 'good looking' },
+		{ word: 'glance', def: 'take a quick look' },
+		{ word: 'error', def: 'mistake' },
+		{ word: 'graphite lead', def: 'black thing inside a pencil' },
+		{ word: 'magical', def: 'having magic' },
+		{ word: 'manage', def: 'able to do something' },
+		{ word: 'stick', def: 'fix to join or long, thin piece of wood' },
+		{ word: 'peep', def: 'take a quick and secret look' },
+		{ word: 'truly', def: 'honestly' },
+		{ word: 'realise', def: 'understand clearly' },
+		{ word: 'warn', def: 'tell about danger in advance' },
+		{ word: 'proudly', def: 'with a feeling of deep joy or satisfaction after achieving something' },
+		{ word: 'wink', def: 'close and open one eye quickly' },
+		{ word: 'several', def: 'more than two but not many' }
+]*/
+
+function _(id) {
+  return document.getElementById(id);
+}
+
+function newWordLabel(expectedWord) {
+	var label = document.createElement('div');
+	label.id = 'word';
+	label.textContent = expectedWord;
+	return label;
+}
+
+function newWordBox(expectedWord) {
+	var textbox = document.createElement('input');
+	textbox.type = 'text';
+	//textbox.size = 1;
+	//textbox.maxLength = 1;
+	textbox.id = 'word';
+	textbox.oninput = function(event) {
+		if(expectedWord.toLowerCase().startsWith(event.target.value.toLowerCase())) {
+			textbox.style.color = 'green';
+			if(expectedWord.toLowerCase()==event.target.value.toLowerCase()) {
+				speak('Super this word is correctly spelled',false);
+				_('word').remove();
+				_('playIcon').remove();
+				_('main').appendChild(newWordLabel(expectedWord));
+				_("success").style.display = 'block';
+				setTimeout(function() {
+					_('new_word').hidden = false;
+					_('playIcon').remove();
+				}, 200);
+			} 
+		} else {
+			textbox.style.color = 'red';
+			//event.target.value='';
+		}
+	}
+	return textbox;
+}
+
+function newPlayIcon(dictItem) {
+  var playIcon = document.createElement("i");
+  playIcon.id = "playIcon";
+  playIcon.className = 'material-icons';
+  playIcon.textContent = "play_circle_outline";
+  playIcon.onclick = function(event) {
+	speak(dictItem.word, false);
+	speak(dictItem.def, false);
+    _('word').focus();
+  }
+
+  return playIcon;
+}
+
+var testInProgress = false;
+var nextWordIdx = 0;
+function newWordClick(event) {
+ testInProgress = true;
+ if(_('word')) {
+   _('word').remove();
+ }
+ if(_('playIcon')) {
+   _('playIcon').remove();
+ }
+ _("success").style.display = 'none';
+ var mainDiv = _('main');
+ if(nextWordIdx>=dictionary.length) {
+   testInProgress = false;
+    var textSpan = document.createElement('span');
+	textSpan.innerHTML = 'All Done!';
+	mainDiv.appendChild(textSpan);
+	return;
+ }
+ var word = dictionary[nextWordIdx].word;
+ speak(word, false);
+ speak(dictionary[nextWordIdx].def, false);
+ 
+ var wordBox = newWordBox(word);	
+ mainDiv.appendChild(newPlayIcon(dictionary[nextWordIdx])); 
+ mainDiv.appendChild(wordBox);
+ 
+ 
+ wordBox.focus();
+ event.target.hidden = true;
+ nextWordIdx++;
+}
+
+_('new_word').onclick = newWordClick;
+
+</script>
+</body>
+</html>
