@@ -47,6 +47,7 @@ function speak(msg, cancel) {
   //}
   var ssMsg = new SpeechSynthesisUtterance(msg);
   ssMsg.lang = 'hi-IN';
+  window.speechSynthesis.cancel();
   window.speechSynthesis.speak(ssMsg);
 }
 
