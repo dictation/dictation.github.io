@@ -50,7 +50,88 @@ function speak(msg, cancel) {
   window.speechSynthesis.speak(ssMsg);
 }
 
+//Claas 3 English Chapter 7 - The Piper of Hamelin
 var dictionary = [
+		{ word: 'hamelin', def: 'a town in northern Germany (near Hanover) that is famous as the setting for the legend of the Pied Piper' },
+		{ word: 'begged', def: 'ask someone earnestly or humbly for something' },
+		{ word: 'shouted', def: 'say something very loudly' },
+		{ word: 'drowned', def: 'die through submersion in and inhalation of water' },
+		{ word: 'piper', def: 'a person who plays a pipe, especially an itinerant musician' },
+		{ word: 'mayor', def: 'the head of a town' },
+		{ word: 'to discuss', def: 'talk about (something) with a person or people' },
+		{ word: 'rid', def: 'be freed or relieved of' },
+		{ word: 'reward', def: 'a thing given in recognition of service, effort, or achievement' },
+		{ word: 'furious', def: 'full of anger or energy; violent or intense' },
+		{ word: 'townspeople', def: 'the people living in a particular town or city' },
+		{ word: 'beautiful', def: 'pleasing the senses or mind aesthetically' },
+		{ word: 'wonderful', def: 'inspiring delight, pleasure, or admiration; extremely good; marvellous' },
+		{ word: 'quietly', def: 'in a quiet manner' },
+		{ word: 'different', def: 'not the same as another or each other; unlike in nature, form, or quality' },
+		{ word: 'disappeared', def: 'cease to be visible' }
+]
+
+
+/*var dictionary = [
+		{ word: 'organ', def: 'a part of an organism which is typically self-contained and has a specific vital function' },
+		{ word: 'hair', def: 'any of the fine threadlike strands growing from the skin of humans, mammals, and some other animals' },
+		{ word: 'mouth', def: 'the opening and cavity in the lower part of the human face, surrounded by the lips, through which food is taken in and vocal sounds are emitted' },
+		{ word: 'eyes', def: 'each of a pair of globular organs of sight in the head of humans and vertebrate animals' },
+		{ word: 'tongue', def: 'the fleshy muscular organ in the mouth of a mammal, used for tasting, licking, swallowing, and (in humans) articulating speech' },
+		{ word: 'stomach', def: 'internal organ in which the major part of the digestion of food occurs' },
+		{ word: 'teeth', def: 'each of a set of hard, bony enamel-coated structures in the jaws of most vertebrates, used for biting and chewing' },
+		{ word: 'neck', def: 'the part of a person\'s or animal\'s body connecting the head to the rest of the body' },
+		{ word: 'heart', def: 'a hollow muscular organ that pumps the blood through the circulatory system by rhythmic contraction and dilation' },
+		{ word: 'sequence', def: 'a particular order in which related things follow each other' },
+		{ word: 'tissue', def: 'any of the distinct types of material of which animals or plants are made, consisting of specialized cells and their products.' },
+		{ word: 'organism', def: 'an individual animal, plant, or single-celled life form.' },
+		{ word: 'skeletal systems', def: 'relating to or functioning as a skeleton' },
+		{ word: 'ribcage', def: 'the bony frame formed by the ribs round the chest.' },
+		{ word: 'lungs', def: 'each of the pair of organs situated within the ribcage, consisting of elastic sacs with branching passages into which air is drawn, so that oxygen can pass into the blood and carbon dioxide be removed.' },
+		{ word: 'muscles', def: 'a band or bundle of fibrous tissue in a human or animal body that has the ability to contract, producing movement in or maintaining the position of parts of the body.' },
+		{ word: 'muscular system', def: 'relating to or affecting the muscles.' },
+		{ word: 'skull', def: 'a bone framework enclosing the brain of a vertebrate; the skeleton of a person\'s or animal\'s head.' },
+		{ word: 'respiratory system', def: 'relating to or affecting respiration or the organs of respiration.' },
+		{ word: 'bronchi', def: 'any of the major air passages of the lungs which diverge from the windpipe.' },
+		{ word: 'respiration', def: 'the action of breathing.' },
+		{ word: 'carbon dioxide', def: 'a colourless, odourless gas produced by burning carbon and organic compounds and by respiration.' },
+		{ word: 'windpipe', def: 'the air passage from the throat to the lungs' },
+		{ word: 'circulatory system', def: 'relating to the circulation of blood or sap.' },
+		{ word: 'oxygen', def: 'a colourless, odourless reactive gas, the chemical element of atomic number 8 and the life-supporting component of the air.' },
+		{ word: 'nutrients', def: 'a substance that provides nourishment essential for the maintenance of life and for growth.' },
+		{ word: 'blood vessels', def: 'a tubular structure carrying blood through the tissues and organs; a vein, artery, or capillary.' },
+		{ word: 'digestive system', def: 'relating to the process of digesting food.' },
+		{ word: 'tongue', def: 'the fleshy muscular organ in the mouth of a mammal, used for tasting, licking, swallowing, and (in humans) articulating speech.' },
+		{ word: 'small intestine', def: 'the part of the intestine that runs between the stomach and the large intestine;' },
+		{ word: 'rectum', def: 'the final section of the large intestine, terminating at the anus.' },
+		{ word: 'excretory system', def: 'relating to or concerned with excretion.' },
+		{ word: 'kidneys', def: 'each of a pair of organs in the abdominal cavity of mammals, birds, and reptiles, that excrete urine.' },
+		{ word: 'ureter', def: 'the duct by which urine passes from the kidney to the bladder ' },
+		{ word: 'urinary bladder', def: 'bladder relating to urine.' },
+		{ word: 'urethra', def: 'the duct by which urine is conveyed out of the body from the bladder, ' },
+		{ word: 'sweat', def: 'moisture exuded through the pores of the skin, typically in profuse quantities as a reaction to heat, physical exertion, fever, or fear.' },
+		{ word: 'nervous system', def: 'relating to or affecting the nerves.' },
+		{ word: 'nerves', def: 'a whitish fibre or bundle of fibres in the body that transmits impulses of sensation to the brain or spinal cord, and impulses from these to the muscles and organs.' },
+		{ word: 'spinal cord', def: 'the cylindrical bundle of nerve fibres and associated tissue which is enclosed in the spine and connects nearly all parts of the body to the brain,' },
+		{ word: 'vertebrae', def: 'each of the series of small bones forming the backbone,' },
+		{ word: 'brain', def: 'an organ of soft nervous tissue contained in the skull of vertebrates, functioning as the coordinating centre of sensation and intellectual and nervous activity.' },
+		{ word: 'sight', def: 'the faculty or power of seeing.' }
+]*/
+
+/*var dictionary = [
+		{ word: 'queasy', def: 'to feel sick; want to vomit' },
+		{ word: 'winced', def: 'made a face to show pain' },
+		{ word: 'runny', def: 'your nose runs when you have a cold; a watery liquid comes out of your nose' },
+		{ word: 'mischievous', def: 'naughty' },
+		{ word: 'bright', def: 'clever' },
+		{ word: '\'cause', def: 'short form of because' },
+		{ word: 'stomach', def: 'internal organ in which the major part of the digestion of food occurs' },
+		{ word: 'groaned', def: 'make a deep inarticulate sound conveying pain' },
+		{ word: 'healthy', def: 'in a good physical or mental condition' },
+		{ word: 'grown', def: 'undergo natural development by increasing in size and changing physically' }
+]*/
+
+/*
+
 		{ word: 'necessities', def: '' },
 		{ word: 'energy', def: '' },
 		{ word: 'herbivores', def: '' },
@@ -95,8 +176,8 @@ var dictionary = [
 		{ word: 'tube', def: '' },
 		{ word: 'suck', def: '' },
 		{ word: 'insect', def: '' }
-]
-
+		
+*/
 
 /*
 var dictionary = [
